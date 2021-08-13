@@ -1,7 +1,8 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import Survey from '../models/surveyModel.js'
 
-// des /login user
+// login user
 
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
@@ -68,4 +69,35 @@ const getUsers = asyncHandler(async (req, res) => {
 })
 
 
-export { login, registerUser, getUsers }
+
+const survey = asyncHandler(async (req, res) => {
+    const { name, email, age, occupation, mobile, pin, address, district, state, message } = req.body
+
+
+
+    const user = await Survey.create({
+
+
+        name, email, age, occupation, mobile, pin, address, district, state, message
+    })
+
+    if (user) {
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+        })
+    } else {
+        res.status(400)
+        throw new Error('Invalid user data')
+    }
+})
+
+const getSurveys = asyncHandler(async (req, res) => {
+    const survey = await Survey.find({})
+    res.send(survey)
+
+})
+
+
+export { login, registerUser, getUsers, getSurveys, survey }
